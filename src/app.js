@@ -2,7 +2,7 @@ import "./app.css";
 import Goal from "./components/controls/goal";
 import Year from "./components/controls/year";
 import Chart from "./components/chart";
-import Map from "./components/map";
+import MapContainer from "./components/map";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         </div>
         <Chart />
       </div>
-      <Map />
+      <MapContainer />
     </div>
   );
 }
