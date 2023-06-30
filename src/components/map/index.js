@@ -3,24 +3,18 @@ import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import Map, {Marker,Popup, Layer, Source} from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 import data from '../../data/indian-states.geojson';
-import {dataLayer} from './mapstyle.js';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {statesLayer, highlightLayer} from './mapstyle';
 
 
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { setStateName } from '../../store/sdgSlice';
 
 export default function Root() {
   const mapRef = useRef();
-  
-
-  const [state, setState] = useState(null);
+  const dispatch = useDispatch();
   const [hoverState, setHoverState] = useState(null)
-  // const onClick = useCallback(event => {
-   
-  // }, []);
-
-
 
   const settings = {
     scrollZoom: false,
@@ -36,19 +30,23 @@ export default function Root() {
 
 
   const onClickHandler = (e) => {
-    const state = e?.features[0]?.properties?.NAME_1;
-    const lngLat = e?.lngLat;
-    const {lat,lng} = lngLat;
-    // console.log(state,lat,lng)
-    setState({state , lat, lng})
+    // const state = e?.features[0]?.properties?.NAME_1;
+    // const lngLat = e?.lngLat;
+    // const {lat,lng} = lngLat;
+    // console.log(hoverState)
+    // setState({state , lat, lng})
+    if(hoverState?.state){
+      const state = hoverState.state.replace(/\s+/g, '-').toLowerCase();
+      window.history?.pushState( {},'',`/?state=${state}`);
+      dispatch(setStateName(state));
+    }
   }
 
   const onHoverHandler = (e) => {
     const state = e?.features[0]?.properties?.NAME_1;
     const lngLat = e?.lngLat;
     const {lat,lng} = lngLat;
-    console.log(state,lat,lng)
-    setHoverState({state , lat, lng})
+    setHoverState({state , lat, lng});
   }
 
   return (
@@ -76,6 +74,7 @@ export default function Root() {
             offset={[0, -10]}
             closeButton={false}
             style={{padding:'20px'}}
+            closeOnClick={false}
           >
             {hoverState.state}
       </Popup>}
