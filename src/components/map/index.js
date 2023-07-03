@@ -10,12 +10,23 @@ import {statesLayer, highlightLayer} from './mapstyle';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { setStateName } from '../../store/sdgSlice';
+import { getValue } from '../../utils/common';
 
 export default function Root() {
   const mapRef = useRef();
   const dispatch = useDispatch();
-  const [hoverState, setHoverState] = useState(null)
+  const {goal, year, stateName} = useSelector(state => state.sdgOpt);
+  const [hoverState, setHoverState] = useState(null);
+  const [sdgVal, setSdgVal] = useState();
+  const state= stateName || new URLSearchParams(window.location.search).get("state");
 
+  useEffect(() =>{
+    if(year && goal && state){
+      const val = getValue(year, goal, state);
+      setSdgVal(val);
+    }},
+  [goal, year, state])
+  
   const settings = {
     scrollZoom: false,
     boxZoom: false,
@@ -62,7 +73,7 @@ export default function Root() {
       {...settings}
       onClick={onClickHandler}
       style={{width: '100%', height: '100vh'}}
-      interactiveLayerIds={['states','states-highlighted']}
+      interactiveLayerIds={['states']}
       mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
     >
       <Source type="geojson" data={data}>
