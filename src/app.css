@@ -41,3 +41,14 @@
 .side select {
   width: 100%;
 }
+
+#hoveredVal{
+  text-align: center;
+  font-size: small;
+  font-weight: 900;
+  border-radius: 50%;
+  margin: 4px auto;
+  padding: 4px;
+  color: rgb(255, 255, 255);
+  width: 2em;
+}

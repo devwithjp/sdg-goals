@@ -19,3 +19,19 @@ export function getStatesValue(year, goal) {
     return stateValues;
 }
 
+export function getColor(value){
+    if (value < 50) {
+        return "#DD1E47"
+      } else if(value >= 50 && value < 65){
+        return '#FFC40C'
+      }
+      else if (value >= 65 && value <100 ){
+        return '#00A084'
+      }
+      else if (value === 100){
+        return '#00AEEF'
+      }
+      else{
+        return '#000'
+    }
+}

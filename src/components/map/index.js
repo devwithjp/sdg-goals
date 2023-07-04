@@ -10,13 +10,13 @@ import {statesLayer, highlightLayer} from './mapstyle';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { setStateName } from '../../store/sdgSlice';
-import { getValue } from '../../utils/common';
+import { getColor, getValue } from '../../utils/common';
 
 export default function Root() {
   const mapRef = useRef();
   const dispatch = useDispatch();
   const {goal, year, stateName} = useSelector(state => state.sdgOpt);
-  const [hoverState, setHoverState] = useState(null);
+  const [hoverState, setHoverState] = useState('','');
   const [sdgVal, setSdgVal] = useState();
   const state= stateName || new URLSearchParams(window.location.search).get("state");
 
@@ -54,13 +54,14 @@ export default function Root() {
   }
 
   const onHoverHandler = (e) => {
-    const state = e?.features[0]?.properties?.NAME_1;
+    const stateHov = e?.features[0]?.properties?.NAME_1;
     const lngLat = e?.lngLat;
     const {lat,lng} = lngLat;
-    // console.log(JSON.parse(e?.features[0]?.properties?.sdgData))
-    setHoverState({state , lat, lng});
+    const value = JSON.parse(e?.features[0]?.properties?.sdgData)?.[year]?.[goal];
+    setHoverState({stateHov , lat, lng, value});
   }
 
+  const {value, stateHov} = hoverState;
   return (
     <Map
       initialViewState={{
@@ -80,7 +81,7 @@ export default function Root() {
       <Source type="geojson" data={data}>
         <Layer  {...statesLayer(year,goal)} />
       </Source>
-      {hoverState?.state && <Popup
+      {stateHov && <Popup
             longitude={hoverState?.lng}
             latitude={hoverState?.lat}
             offset={[0, -10]}
@@ -88,7 +89,8 @@ export default function Root() {
             style={{padding:'20px'}}
             closeOnClick={false}
           >
-            {hoverState.state}
+            {stateHov}
+            {value && <div id='hoveredVal' style={{backgroundColor:getColor(value)}}>{value}</div>}
       </Popup>}
     </Map>
   );
