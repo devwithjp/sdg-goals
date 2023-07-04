@@ -2,8 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  goal: '',
-  year: '',
+  goal: 'SDG Index Score',
+  year: '2018',
   stateName:''
 }
 

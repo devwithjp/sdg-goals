@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import Map, {Marker,Popup, Layer, Source} from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
-import data from '../../data/indian-states.geojson';
+import data from '../../data/indian-states2.geojson';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {statesLayer, highlightLayer} from './mapstyle';
@@ -57,6 +57,7 @@ export default function Root() {
     const state = e?.features[0]?.properties?.NAME_1;
     const lngLat = e?.lngLat;
     const {lat,lng} = lngLat;
+    // console.log(JSON.parse(e?.features[0]?.properties?.sdgData))
     setHoverState({state , lat, lng});
   }
 
@@ -77,7 +78,7 @@ export default function Root() {
       mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
     >
       <Source type="geojson" data={data}>
-        <Layer  {...statesLayer} />
+        <Layer  {...statesLayer(year,goal)} />
       </Source>
       {hoverState?.state && <Popup
             longitude={hoverState?.lng}

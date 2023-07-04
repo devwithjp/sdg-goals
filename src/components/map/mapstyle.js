@@ -1,6 +1,7 @@
 
 
-export const statesLayer= {
+export const statesLayer= (year,goal) =>{ 
+  return {
     id: 'states',
     type: 'fill',
     source:'india',
@@ -10,27 +11,6 @@ export const statesLayer= {
       },
     paint: {
       'fill-outline-color': 'rgba(0,0,0,0.9)',
-      'fill-color': {property: 'area',
-      stops: [
-        [0, '#3288bd'],
-        [1, '#66c2a5'],
-        [2, '#abdda4'],
-        [3, '#e6f598'],
-        [4, '#ffffbf'],
-        [5, '#fee08b'],
-        [6, '#fdae61'],
-        [7, '#f46d43'],
-        [8, '#d53e4f']
-      ]}
+      'fill-color':  [ "step",['get', goal , ['get', year, ['get' , 'sdgData', ['properties']]]],"#DD1E47",50,"#FFC40C",65,"#00A084",99,'#00AEEF']
     }
-  };
-//   export const highlightLayer = {
-//     id: 'states-highlighted',
-//     type: 'fill',
-//     source:'india',
-//     paint: {
-//       'fill-outline-color': '#484896',
-//       'fill-color': '#6e599f',
-//       'fill-opacity': 0.75
-//     }
-//   };
+  }};

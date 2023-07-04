@@ -6,7 +6,7 @@ const indiaGeoJson = require('./indian-states.json')
 var fs = require('fs');
 
 
-
+//script file to modify json files to a required format. run using `node data-
 
 function formatSdgYearData(yearData){
     let modifiedData = {}
@@ -37,26 +37,6 @@ function formatSdgData(){
 
 
 
-// export function getValue(year, goal, state) {
-//     const modGoal = goal?.split(':')?.[0];
-//     // console.log("VAL", data?.[year]?.[state]?.chartdata?.find(chartdataItem => chartdataItem.name === modGoal)?.value);
-//     return data?.[year]?.[state]?.chartdata?.find(chartdataItem => chartdataItem.name === modGoal)?.value
-// }
-
-// export function getStatesValue(year, goal) {
-//     console.log(year)
-//     let stateValues = {}
-//     if(!year || !goal) {
-//         return
-//     }
-//     Object.keys(data?.[year])?.forEach(state => 
-//         { 
-//             stateValues = {...stateValues, [data?.[year]?.[state]?.["area_name"]] : getValue(year, goal,state)}
-//         });
-//     return stateValues;
-// }
-
-
 
 
 
@@ -65,7 +45,9 @@ features = indiaGeoJson.features;
 
 function insertToGeoJson(state, newData){
     let index = features.findIndex(item => item?.["properties"]?.["NAME_1"]?.replace(/\s+/g, '-').toLowerCase() === state);
-    features[index] = {...features[index], ...newData }
+    if(features[index]?.["properties"]){
+        features[index]["properties"] = {...features[index]?.["properties"], ...newData };
+    }
     console.dir(features);
     const da = features;
 
@@ -83,21 +65,72 @@ function createDataforGeoJson(){
             states.indexOf(state) === -1 && states.push(state)
         });
 
-    let stateObj= {}
-    states.forEach(state => {        
-        let yearObj = {}
+    states.forEach(state => {
+        let stateObj= {}             
         Object.keys(data)?.forEach(year => 
-        { 
-            yearObj = { ...yearObj, [year]: data?.[year]?.[state]?.["chartdata"]}
+        {   let yearObj = {}
+            data?.[year]?.[state]?.["chartdata"].forEach(item => {
+                yearObj[item.name] = item.value 
+
+            });  
+            stateObj = { ...stateObj, [year]: yearObj}
         });
-        stateObj = {sdgData: yearObj}
+         
+        stateObj = {sdgData: stateObj}
+        console.log(state,stateObj);
 
         insertToGeoJson(state, stateObj)
     })
-    console.log(states);
 }
 
+// createDataforGeoJson()
+
+
+// var features = [];
+// features = indiaGeoJson.features;
+
+// function insertToGeoJson(state, newData,year){
+//     let index = features.findIndex(item => item?.["properties"]?.["NAME_1"]?.replace(/\s+/g, '-').toLowerCase() === state);
+//     if(features[index]?.["properties"]){
+//         features[index]["properties"] = {...features[index]?.["properties"], ...newData };
+//     }
+//     console.dir(features);
+//     const da = features;
+
+//     let json = {
+//         "type": "FeatureCollection", "features" : [...da]}
+
+//     fs.writeFile(`./indian-states${year}mock.geojson`, JSON.stringify(json), ()=>{});
+
+// }
+
+// function createDataforGeoJson(){
+//     let states = []
+//     Object.keys(data?.['2019'])?.forEach(state => 
+//         { 
+//             states.indexOf(state) === -1 && states.push(state)
+//         });
+
+//     let stateObj= {}
+    
+//     const years = ["2018"]
+//     years.forEach((year)=>{
+//         states.forEach(state => {
+//             const goalsObj = {};
+//             // data?.[year]?.[state]?.["chartdata"].forEach(item => {
+//             //     goalsObj[item.name] = item.value 
+
+//             // });      
+//             // stateObj = {sdgData: goalsObj}
+//             stateObj = {sdgData: data?.[year]?.[state]?.["chartdata"]?.[16]?.['value'] }
+//             console.log(stateObj)
+//             insertToGeoJson(state, stateObj,year)
+//         })
+//     })
+    
+// }
 
 
 
-createDataforGeoJson()
+
+// createDataforGeoJson()

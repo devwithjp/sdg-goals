@@ -8,12 +8,14 @@ export default function Chart() {
 
   const {goal, year, stateName} = useSelector(state => state.sdgOpt);
   const state= stateName || new URLSearchParams(window.location.search).get("state"); //if user uses link instead of map for a state or refreshes
-  // useEffect(() =>{
-  //   if(year && goal && state){
-  //     const value = getStatesValue(year, goal)
-  //     setStatesValue(value);
-  //   }},
-  // [goal, year, state])
+  
+  
+  useEffect(() =>{
+    if(year && goal && state){
+      const value = getStatesValue(year, goal)
+      setStatesValue(value);
+    }},
+  [goal, year, state])
   
 
   return( 
