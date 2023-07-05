@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import Map, {Marker,Popup, Layer, Source} from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
-import data from '../../data/indian-states2.geojson';
+import data from '../data/indian-states2.geojson';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {statesLayer, highlightLayer} from './mapstyle';

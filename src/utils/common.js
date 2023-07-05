@@ -1,4 +1,4 @@
-const data  = require('../data/sdg-data.json');
+const data  = require('../components/data/sdg-data.json');
 
 export function getValue(year, goal, state) {
     const modGoal = goal?.split(':')?.[0];
